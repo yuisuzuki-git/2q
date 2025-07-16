@@ -6,11 +6,21 @@
   <title>制作管理ツール</title>
   <style>
     * { box-sizing: border-box; }
+    :root {
+      --bg-color: #f9f9f9;
+      --text-color: #333;
+      --card-bg-color: white;
+    }
+    body.dark-mode {
+      --bg-color: #1e1e1e;
+      --text-color: #f9f9f9;
+      --card-bg-color: #2a2a2a;
+    }
     body {
       font-family: 'Helvetica Neue', sans-serif;
       margin: 0;
-      background-color: #f9f9f9;
-      color: #333;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
     .app {
       max-width: 960px;
@@ -36,14 +46,12 @@
       font-weight: bold;
     }
     .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    #idea.tab-content.active, #todo.tab-content.active {
-      background-color: #ffffff;
+    .tab-content.active {
+      display: block;
+      background-color: var(--bg-color);
       border-radius: 10px;
       padding: 20px;
     }
-
     #add-idea {
       background-color: #f0c000;
       border: none;
@@ -53,37 +61,31 @@
       cursor: pointer;
       margin-bottom: 20px;
     }
-
     .card-list {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
     }
-
     .card, .todo-card {
-      background: white;
+      background: var(--card-bg-color);
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       width: 300px;
       overflow: hidden;
     }
-
     .card img, .todo-card img {
       width: 100%;
       height: 200px;
       object-fit: cover;
     }
-
     .card .details, .todo-card .details {
       padding: 10px;
     }
-
     .timestamp {
       font-size: 0.85rem;
       color: #777;
       margin-top: 5px;
     }
-
     .todo-card button {
       margin: 5px;
       padding: 10px;
@@ -92,20 +94,14 @@
       cursor: pointer;
       border: none;
     }
-
     .done-btn { background-color: #f0c000; }
     .delete-btn { background-color: #ddd; }
-
     .todo-columns {
       display: flex;
       gap: 30px;
       flex-wrap: wrap;
     }
-
-    .todo-column {
-      flex: 1;
-    }
-
+    .todo-column { flex: 1; }
     .modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -115,11 +111,7 @@
       align-items: center;
       z-index: 10;
     }
-
-    .modal.hidden {
-      display: none;
-    }
-
+    .modal.hidden { display: none; }
     .modal-content {
       background: #f0c000;
       padding: 30px;
@@ -128,7 +120,6 @@
       display: flex;
       flex-direction: column;
     }
-
     .modal-content input[type="text"],
     .modal-content input[type="file"] {
       width: 100%;
@@ -138,12 +129,10 @@
       border-radius: 5px;
       border: none;
     }
-
     .modal-content .buttons {
       display: flex;
       gap: 10px;
     }
-
     .modal-content button {
       flex: 1;
       padding: 8px 10px;
@@ -152,39 +141,35 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
     #cancel { background-color: #eee; }
     #idea-form button[type="submit"] { background-color: #fff; }
-
+    .mode-toggle {
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
     @media screen and (max-width: 600px) {
-      .tabs {
-        flex-direction: column;
-      }
-      .card-list {
-        flex-direction: column;
-        align-items: center;
-      }
-      .todo-columns {
-        flex-direction: column;
-      }
+      .tabs { flex-direction: column; }
+      .card-list { flex-direction: column; align-items: center; }
+      .todo-columns { flex-direction: column; }
     }
   </style>
 </head>
 <body>
   <div class="app">
     <header>
-      <h1>制作管理Todo</h1>
+      <h1>制作管理ツール</h1>
+      <button id="mode-toggle" class="mode-toggle">🌙 ダークモード</button>
       <div class="tabs">
         <button class="tab-button active" data-tab="idea">アイデアボード</button>
         <button class="tab-button" data-tab="todo">制作Todo</button>
       </div>
     </header>
-
     <section id="idea" class="tab-content active">
       <button id="add-idea">＋新規追加</button>
       <div id="idea-list" class="card-list"></div>
     </section>
-
     <section id="todo" class="tab-content">
       <div class="todo-columns">
         <div class="todo-column">
@@ -197,13 +182,12 @@
         </div>
       </div>
     </section>
-
     <div id="modal" class="modal hidden">
       <div class="modal-content">
         <h2>アイデア追加</h2>
         <form id="idea-form">
           <input type="text" id="item-name" placeholder="項目名" required />
-          <input type="text" id="duration" placeholder="所要時間" required />
+          <input type="text" id="duration" placeholder="所要時間（分）" required />
           <input type="text" id="materials" placeholder="必要なもの" required />
           <input type="file" id="image" accept="image/*" required />
           <div class="buttons">
@@ -214,18 +198,9 @@
       </div>
     </div>
   </div>
-
   <script>
     const tabs = document.querySelectorAll('.tab-button');
     const contents = document.querySelectorAll('.tab-content');
-    const modal = document.getElementById('modal');
-    const addBtn = document.getElementById('add-idea');
-    const cancelBtn = document.getElementById('cancel');
-    const ideaForm = document.getElementById('idea-form');
-    const ideaList = document.getElementById('idea-list');
-    const notYetList = document.getElementById('not-yet-list');
-    const doneList = document.getElementById('done-list');
-
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
         tabs.forEach(t => t.classList.remove('active'));
@@ -235,40 +210,40 @@
       });
     });
 
-    addBtn.onclick = () => modal.classList.remove('hidden');
-    cancelBtn.onclick = () => modal.classList.add('hidden');
+    document.getElementById('mode-toggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      document.getElementById('mode-toggle').textContent = isDark ? '☀️ ライトモード' : '🌙 ダークモード';
+    });
+
+    const modal = document.getElementById('modal');
+    const addBtn = document.getElementById('add-idea');
+    const cancelBtn = document.getElementById('cancel');
+    const ideaForm = document.getElementById('idea-form');
+    const ideaList = document.getElementById('idea-list');
+    const notYetList = document.getElementById('not-yet-list');
+    const doneList = document.getElementById('done-list');
 
     function getFormattedDate() {
       const now = new Date();
-      return `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+      return `${now.getFullYear()}年${String(now.getMonth()+1).padStart(2,'0')}月${String(now.getDate()).padStart(2,'0')}日 ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     }
 
-    function saveData() {
-      localStorage.setItem('ideas', ideaList.innerHTML);
-      localStorage.setItem('notYet', notYetList.innerHTML);
-      localStorage.setItem('done', doneList.innerHTML);
-    }
-
-    function loadData() {
-      ideaList.innerHTML = localStorage.getItem('ideas') || '';
-      notYetList.innerHTML = localStorage.getItem('notYet') || '';
-      doneList.innerHTML = localStorage.getItem('done') || '';
-    }
-
-    window.addEventListener('load', loadData);
+    addBtn.onclick = () => modal.classList.remove('hidden');
+    cancelBtn.onclick = () => modal.classList.add('hidden');
 
     ideaForm.onsubmit = (e) => {
       e.preventDefault();
       const name = document.getElementById('item-name').value.trim();
       const duration = document.getElementById('duration').value.trim();
       const materials = document.getElementById('materials').value.trim();
-      const image = document.getElementById('image').files[0];
+      const imageFile = document.getElementById('image').files[0];
       const timestamp = getFormattedDate();
 
-      if (!name || !duration || !materials || !image) return;
+      if (!name || !duration || !materials || !imageFile) return;
 
       const reader = new FileReader();
-      reader.onload = function () {
+      reader.onload = () => {
         const imageSrc = reader.result;
 
         const ideaCard = document.createElement('div');
@@ -277,11 +252,10 @@
           <img src="${imageSrc}" />
           <div class="details">
             <p><strong>${name}</strong></p>
-            <p>所要時間: ${duration}</p>
+            <p>所要時間: ${duration}分</p>
             <p>材料: ${materials}</p>
             <p class="timestamp">登録: ${timestamp}</p>
-          </div>
-        `;
+          </div>`;
         ideaList.appendChild(ideaCard);
 
         const todoCard = document.createElement('div');
@@ -290,37 +264,61 @@
           <img src="${imageSrc}" />
           <div class="details">
             <p><strong>${name}</strong></p>
-            <p>所要時間: ${duration}</p>
+            <p>所要時間: ${duration}分</p>
             <p>材料: ${materials}</p>
             <p class="timestamp">登録: ${timestamp}</p>
           </div>
-          <div style="display:flex; justify-content:center; gap:10px; margin-bottom:10px;">
+          <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
             <button class="done-btn">完了</button>
             <button class="delete-btn">削除</button>
-          </div>
-        `;
+          </div>`;
 
-        const doneBtn = todoCard.querySelector('.done-btn');
-        const deleteBtn = todoCard.querySelector('.delete-btn');
-
-        doneBtn.addEventListener('click', () => {
-          doneBtn.remove();
+        todoCard.querySelector('.done-btn').onclick = () => {
+          todoCard.querySelector('.done-btn').remove();
           doneList.appendChild(todoCard);
-          saveData();
-        });
-
-        deleteBtn.addEventListener('click', () => {
-          todoCard.remove();
-          saveData();
-        });
+        };
+        todoCard.querySelector('.delete-btn').onclick = () => todoCard.remove();
 
         notYetList.appendChild(todoCard);
         modal.classList.add('hidden');
         ideaForm.reset();
         saveData();
       };
-      reader.readAsDataURL(image);
+      reader.readAsDataURL(imageFile);
     };
+
+    function saveData() {
+      const data = {
+        ideas: ideaList.innerHTML,
+        notYet: notYetList.innerHTML,
+        done: doneList.innerHTML
+      };
+      localStorage.setItem('todoData', JSON.stringify(data));
+    }
+
+    function restoreData() {
+      const data = JSON.parse(localStorage.getItem('todoData'));
+      if (!data) return;
+      ideaList.innerHTML = data.ideas;
+      notYetList.innerHTML = data.notYet;
+      doneList.innerHTML = data.done;
+
+      document.querySelectorAll('.done-btn').forEach(btn => {
+        btn.onclick = () => {
+          btn.remove();
+          doneList.appendChild(btn.closest('.todo-card'));
+          saveData();
+        }
+      });
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.onclick = () => {
+          btn.closest('.todo-card').remove();
+          saveData();
+        }
+      });
+    }
+
+    restoreData();
   </script>
 </body>
 </html>
