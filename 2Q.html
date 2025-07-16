@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ファッションサイト</title>
+  <style>
+    body {
+        font-family: 'Helvetica Neue', sans-serif;
+        margin: 0;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+      
+      .app {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      
+      header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+      }
+      
+      .tabs {
+        display: flex;
+        gap: 1rem;
+        border-bottom: 2px solid #ccc;
+        margin-bottom: 20px;
+      }
+      
+      .tab-button {
+        background: none;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        border-bottom: 4px solid transparent;
+        transition: border-color 0.3s;
+      }
+      
+      .tab-button.active {
+        border-bottom: 4px solid #f0c000;
+        font-weight: bold;
+      }
+      
+      #add-idea {
+        background-color: #f0c000;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 20px;
+      }
+      
+      .card-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+      
+      .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        width: 300px;
+        overflow: hidden;
+      }
+      
+      .card img {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+      }
+      
+      .card .details {
+        padding: 10px;
+      }
+      
+      .card .details p {
+        margin: 4px 0;
+      }
+      
+      .todo-columns {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+      }
+      
+      .todo-column {
+        flex: 1;
+      }
+      
+      .todo-card {
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        margin-bottom: 20px;
+      }
+      
+      .todo-card img {
+        width: 300px;
+        height: 300px;
+        object-fit: cover;
+      }
+      
+      .todo-card .details {
+        padding: 10px;
+      }
+      
+      .todo-card button {
+        margin: 10px;
+        background-color: #f0c000;
+        border: none;
+        padding: 10px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        border-radius: 5px; /* 角丸 */
+        color: #000;
+        font-weight: bold;
+        transition: background-color 0.3s;
+      }
+      
+      .todo-card button:hover {
+        background-color: #e6b800;
+      }
+    
+      
+      .todo-header {
+        display: none;
+      }
+      
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+      }
+      
+      .modal.hidden {
+        display: none;
+      }
+      
+      .modal-content {
+        background: #f0c000;
+        padding: 30px;
+        border-radius: 10px;
+        width: 300px;
+        display: flex;
+        flex-direction: column;
+        color: #333;
+      }
+      
+      .modal-content input[type="text"] {
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.4rem;
+        width: 85%;
+        margin-bottom: 20px;
+        text-align: left;
+        align-self: center;
+      }
+      
+      .modal-content input[type="file"] {
+        width: 85%;
+        margin-bottom: 10px;
+        font-size: 1rem;
+        color: transparent;
+        position: relative;
+        z-index: 2;
+        align-self: center;
+      }
+      
+      .modal-content input[type="file"]::before {
+        content: 'ファイルを選択してください';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        top: 50%;
+        font-size: 1rem;
+        cursor: pointer;
+        z-index: 1;
+      }
+      
+      .modal-content .buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        width: 100%;
+      }
+      
+      .modal-content button {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 5px;
+        font-size: 1rem;
+        cursor: pointer;
+        flex: 1;
+        margin: 0 5px;
+      }
+      
+      #cancel {
+        background-color: #eee;
+      }
+      
+      #idea-form button[type="submit"] {
+        background-color: #fff;
+      }
+      
+      @media screen and (max-width: 600px) {
+        .todo-columns {
+            background-color: #f0c000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+      
+        .card-list {
+          justify-content: center;
+        }
+      
+        .card {
+          width: 100%;
+        }
+      
+        .todo-card {
+          width: 100%;
+        }
+      }
+      
+</style>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>制作Todo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>制作todo</h1>
+      <div class="tabs">
+        <button class="tab-button active" data-tab="idea">アイデアボード</button>
+        <button class="tab-button" data-tab="todo">制作todo</button>
+      </div>
+    </header>
+
+    <section id="idea" class="tab-content active">
+      <button id="add-idea">＋新規追加</button>
+      <div id="idea-list" class="card-list"></div>
+    </section>
+
+    <section id="todo" class="tab-content">
+      <div class="todo-columns">
+        <div class="todo-column">
+          <h2>Not yet</h2>
+          <div id="not-yet-list" class="card-list"></div>
+        </div>
+        <div class="todo-column">
+          <h2>Done</h2>
+          <div id="done-list" class="card-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>アイデアボード 登録</h2>
+        <form id="idea-form">
+          <input type="text" id="item-name" placeholder="項目" required />
+          <input type="text" id="duration" placeholder="所要時間の見積もり" required />
+          <input type="text" id="materials" placeholder="必要なもの" required />
+          <input type="file" id="image" accept="image/*" required />
+          <div class="buttons">
+            <button type="button" id="cancel">キャンセル</button>
+            <button type="submit">登録</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
