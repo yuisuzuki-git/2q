@@ -1,264 +1,182 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ファッションサイト</title>
-  <style>
-    body {
-        font-family: 'Helvetica Neue', sans-serif;
-        margin: 0;
-        background-color: #f9f9f9;
-        color: #333;
-      }
-      
-      .app {
-        max-width: 960px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      
-      header h1 {
-        font-size: 1.8rem;
-        margin-bottom: 10px;
-      }
-      
-      .tabs {
-        display: flex;
-        gap: 1rem;
-        border-bottom: 2px solid #ccc;
-        margin-bottom: 20px;
-      }
-      
-      .tab-button {
-        background: none;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        border-bottom: 4px solid transparent;
-        transition: border-color 0.3s;
-      }
-      
-      .tab-button.active {
-        border-bottom: 4px solid #f0c000;
-        font-weight: bold;
-      }
-      
-      #add-idea {
-        background-color: #f0c000;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        border-radius: 5px;
-        cursor: pointer;
-        margin-bottom: 20px;
-      }
-      
-      .card-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 20px;
-      }
-      
-      .card {
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        width: 300px;
-        overflow: hidden;
-      }
-      
-      .card img {
-        width: 300px;
-        height: 300px;
-        object-fit: cover;
-      }
-      
-      .card .details {
-        padding: 10px;
-      }
-      
-      .card .details p {
-        margin: 4px 0;
-      }
-      
-      .todo-columns {
-        display: flex;
-        gap: 30px;
-        flex-wrap: wrap;
-      }
-      
-      .todo-column {
-        flex: 1;
-      }
-      
-      .todo-card {
-        display: flex;
-        flex-direction: column;
-        width: 300px;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        margin-bottom: 20px;
-      }
-      
-      .todo-card img {
-        width: 300px;
-        height: 300px;
-        object-fit: cover;
-      }
-      
-      .todo-card .details {
-        padding: 10px;
-      }
-      
-      .todo-card button {
-        margin: 10px;
-        background-color: #f0c000;
-        border: none;
-        padding: 10px 20px;
-        font-size: 1rem;
-        cursor: pointer;
-        border-radius: 5px; /* 角丸 */
-        color: #000;
-        font-weight: bold;
-        transition: background-color 0.3s;
-      }
-      
-      .todo-card button:hover {
-        background-color: #e6b800;
-      }
-    
-      
-      .todo-header {
-        display: none;
-      }
-      
-      .modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10;
-      }
-      
-      .modal.hidden {
-        display: none;
-      }
-      
-      .modal-content {
-        background: #f0c000;
-        padding: 30px;
-        border-radius: 10px;
-        width: 300px;
-        display: flex;
-        flex-direction: column;
-        color: #333;
-      }
-      
-      .modal-content input[type="text"] {
-        padding: 10px;
-        border: none;
-        border-radius: 5px;
-        font-size: 1.4rem;
-        width: 85%;
-        margin-bottom: 20px;
-        text-align: left;
-        align-self: center;
-      }
-      
-      .modal-content input[type="file"] {
-        width: 85%;
-        margin-bottom: 10px;
-        font-size: 1rem;
-        color: transparent;
-        position: relative;
-        z-index: 2;
-        align-self: center;
-      }
-      
-      .modal-content input[type="file"]::before {
-        content: 'ファイルを選択してください';
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-        top: 50%;
-        font-size: 1rem;
-        cursor: pointer;
-        z-index: 1;
-      }
-      
-      .modal-content .buttons {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
-        width: 100%;
-      }
-      
-      .modal-content button {
-        padding: 8px 15px;
-        border: none;
-        border-radius: 5px;
-        font-size: 1rem;
-        cursor: pointer;
-        flex: 1;
-        margin: 0 5px;
-      }
-      
-      #cancel {
-        background-color: #eee;
-      }
-      
-      #idea-form button[type="submit"] {
-        background-color: #fff;
-      }
-      
-      @media screen and (max-width: 600px) {
-        .todo-columns {
-            background-color: #f0c000;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-      
-        .card-list {
-          justify-content: center;
-        }
-      
-        .card {
-          width: 100%;
-        }
-      
-        .todo-card {
-          width: 100%;
-        }
-      }
-      
-</style>
-<!DOCTYPE html>
-<html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>制作Todo</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>制作管理ツール</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Helvetica Neue', sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .app {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header h1 { font-size: 1.8rem; margin-bottom: 10px; }
+    .tabs {
+      display: flex; gap: 1rem;
+      border-bottom: 2px solid #ccc;
+      margin-bottom: 20px;
+    }
+    .tab-button {
+      background: none;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-bottom: 4px solid transparent;
+    }
+    .tab-button.active {
+      border-bottom: 4px solid #f0c000;
+      font-weight: bold;
+    }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    #idea.tab-content.active, #todo.tab-content.active {
+      background-color: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    #add-idea {
+      background-color: #f0c000;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .card-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .card, .todo-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 300px;
+      overflow: hidden;
+    }
+
+    .card img, .todo-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .card .details, .todo-card .details {
+      padding: 10px;
+    }
+
+    .timestamp {
+      font-size: 0.85rem;
+      color: #777;
+      margin-top: 5px;
+    }
+
+    .todo-card button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      border: none;
+    }
+
+    .done-btn { background-color: #f0c000; }
+    .delete-btn { background-color: #ddd; }
+
+    .todo-columns {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .todo-column {
+      flex: 1;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .modal.hidden {
+      display: none;
+    }
+
+    .modal-content {
+      background: #f0c000;
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-content input[type="text"],
+    .modal-content input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      border-radius: 5px;
+      border: none;
+    }
+
+    .modal-content .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-content button {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #cancel { background-color: #eee; }
+    #idea-form button[type="submit"] { background-color: #fff; }
+
+    @media screen and (max-width: 600px) {
+      .tabs {
+        flex-direction: column;
+      }
+      .card-list {
+        flex-direction: column;
+        align-items: center;
+      }
+      .todo-columns {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="app">
     <header>
-      <h1>制作todo</h1>
+      <h1>制作管理Todo</h1>
       <div class="tabs">
         <button class="tab-button active" data-tab="idea">アイデアボード</button>
-        <button class="tab-button" data-tab="todo">制作todo</button>
+        <button class="tab-button" data-tab="todo">制作Todo</button>
       </div>
     </header>
 
@@ -282,10 +200,10 @@
 
     <div id="modal" class="modal hidden">
       <div class="modal-content">
-        <h2>アイデアボード 登録</h2>
+        <h2>アイデア追加</h2>
         <form id="idea-form">
-          <input type="text" id="item-name" placeholder="項目" required />
-          <input type="text" id="duration" placeholder="所要時間の見積もり" required />
+          <input type="text" id="item-name" placeholder="項目名" required />
+          <input type="text" id="duration" placeholder="所要時間" required />
           <input type="text" id="materials" placeholder="必要なもの" required />
           <input type="file" id="image" accept="image/*" required />
           <div class="buttons">
@@ -297,6 +215,112 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    const tabs = document.querySelectorAll('.tab-button');
+    const contents = document.querySelectorAll('.tab-content');
+    const modal = document.getElementById('modal');
+    const addBtn = document.getElementById('add-idea');
+    const cancelBtn = document.getElementById('cancel');
+    const ideaForm = document.getElementById('idea-form');
+    const ideaList = document.getElementById('idea-list');
+    const notYetList = document.getElementById('not-yet-list');
+    const doneList = document.getElementById('done-list');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        contents.forEach(c => c.classList.remove('active'));
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    addBtn.onclick = () => modal.classList.remove('hidden');
+    cancelBtn.onclick = () => modal.classList.add('hidden');
+
+    function getFormattedDate() {
+      const now = new Date();
+      return `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日 ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+    }
+
+    function saveData() {
+      localStorage.setItem('ideas', ideaList.innerHTML);
+      localStorage.setItem('notYet', notYetList.innerHTML);
+      localStorage.setItem('done', doneList.innerHTML);
+    }
+
+    function loadData() {
+      ideaList.innerHTML = localStorage.getItem('ideas') || '';
+      notYetList.innerHTML = localStorage.getItem('notYet') || '';
+      doneList.innerHTML = localStorage.getItem('done') || '';
+    }
+
+    window.addEventListener('load', loadData);
+
+    ideaForm.onsubmit = (e) => {
+      e.preventDefault();
+      const name = document.getElementById('item-name').value.trim();
+      const duration = document.getElementById('duration').value.trim();
+      const materials = document.getElementById('materials').value.trim();
+      const image = document.getElementById('image').files[0];
+      const timestamp = getFormattedDate();
+
+      if (!name || !duration || !materials || !image) return;
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const imageSrc = reader.result;
+
+        const ideaCard = document.createElement('div');
+        ideaCard.className = 'card';
+        ideaCard.innerHTML = `
+          <img src="${imageSrc}" />
+          <div class="details">
+            <p><strong>${name}</strong></p>
+            <p>所要時間: ${duration}</p>
+            <p>材料: ${materials}</p>
+            <p class="timestamp">登録: ${timestamp}</p>
+          </div>
+        `;
+        ideaList.appendChild(ideaCard);
+
+        const todoCard = document.createElement('div');
+        todoCard.className = 'todo-card';
+        todoCard.innerHTML = `
+          <img src="${imageSrc}" />
+          <div class="details">
+            <p><strong>${name}</strong></p>
+            <p>所要時間: ${duration}</p>
+            <p>材料: ${materials}</p>
+            <p class="timestamp">登録: ${timestamp}</p>
+          </div>
+          <div style="display:flex; justify-content:center; gap:10px; margin-bottom:10px;">
+            <button class="done-btn">完了</button>
+            <button class="delete-btn">削除</button>
+          </div>
+        `;
+
+        const doneBtn = todoCard.querySelector('.done-btn');
+        const deleteBtn = todoCard.querySelector('.delete-btn');
+
+        doneBtn.addEventListener('click', () => {
+          doneBtn.remove();
+          doneList.appendChild(todoCard);
+          saveData();
+        });
+
+        deleteBtn.addEventListener('click', () => {
+          todoCard.remove();
+          saveData();
+        });
+
+        notYetList.appendChild(todoCard);
+        modal.classList.add('hidden');
+        ideaForm.reset();
+        saveData();
+      };
+      reader.readAsDataURL(image);
+    };
+  </script>
 </body>
 </html>
